@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Request {{ service.title }}{% endblock %}
+{% block content %}
+<section class="auth-section align-items-start">
+  <div class="auth-card">
+    <a class="text-link small" href="{{ url_for('main.service_detail', service_id=service.id) }}">← Back to service</a>
+    <span class="eyebrow d-block mt-4">{{ service.category.name }}</span>
+    <h1 class="h2 mt-2">{{ service.title }}</h1>
+    <p class="text-secondary">Starting at <strong class="text-dark">${{ "%.2f"|format(service.base_price) }}</strong></p>
+    <form method="post" novalidate class="mt-4">
+      {{ form.hidden_tag() }}
+      {% for field in [form.scheduled_for, form.address, form.notes] %}
+        <div class="mb-3">
+          {{ field.label(class="form-label") }}
+          {% if field.name == 'scheduled_for' %}{{ field(class="form-control" + (" is-invalid" if field.errors else ""), min=today.isoformat()) }}
+          {% elif field.name == 'notes' %}{{ field(class="form-control" + (" is-invalid" if field.errors else ""), rows="4", placeholder="Anything the provider should know?") }}
+          {% else %}{{ field(class="form-control" + (" is-invalid" if field.errors else "")) }}{% endif %}
+          {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+        </div>
+      {% endfor %}
+      <button class="btn btn-primary w-100" type="submit">Submit booking request</button>
+    </form>
+    <p class="form-note mt-3 mb-0">This submits a service request with your preferred date; it does not confirm provider availability.</p>
+  </div>
+</section>
+{% endblock %}

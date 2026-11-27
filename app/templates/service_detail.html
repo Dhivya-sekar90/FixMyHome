@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ service.title }}{% endblock %}
+{% block content %}
+<section class="section-space">
+  <div class="container">
+    <a class="text-link mb-4 d-inline-block" href="{{ url_for('main.services') }}">← All services</a>
+    <div class="row g-5">
+      <div class="col-lg-8">
+        <span class="category-label">{{ service.category.name }}</span>
+        <h1 class="display-5 fw-bold mt-3">{{ service.title }}</h1>
+        <p class="lead text-secondary mt-3">{{ service.description }}</p>
+        <div class="detail-note mt-4"><strong>What happens next?</strong><span>Send a booking request with your preferred date and address. The provider will have your request details.</span></div>
+      </div>
+      <aside class="col-lg-4">
+        <div class="booking-summary">
+          <span class="text-secondary small">Starting from</span>
+          <div class="h2 fw-bold mt-1">${{ "%.2f"|format(service.base_price) }}</div>
+          {% if current_user.is_authenticated and current_user.role == 'customer' %}
+            <a class="btn btn-primary w-100 mt-3" href="{{ url_for('customer.book_service', service_id=service.id) }}">Request this service</a>
+          {% elif current_user.is_authenticated %}
+            <p class="small text-secondary mt-3 mb-0">Customer accounts can request this service.</p>
+          {% else %}
+            <a class="btn btn-primary w-100 mt-3" href="{{ url_for('auth.login', next=url_for('customer.book_service', service_id=service.id)) }}">Sign in to book</a>
+            <a class="btn btn-outline-primary w-100 mt-2" href="{{ url_for('auth.register', role='customer') }}">Create customer account</a>
+          {% endif %}
+          {% if service.provider %}<p class="small text-secondary mt-3 mb-0">Provider: {{ service.provider.name }}</p>{% endif %}
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+{% endblock %}

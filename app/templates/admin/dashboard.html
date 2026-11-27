@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Admin dashboard{% endblock %}
+{% block content %}
+<section class="dashboard-header"><div class="container d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3"><div><span class="eyebrow">Platform overview</span><h1 class="h2 mt-2 mb-1">Admin dashboard</h1><p class="text-secondary mb-0">Manage service listings and see a snapshot of the platform.</p></div><a class="btn btn-primary" href="{{ url_for('admin.create_service') }}">Add a service</a></div></section>
+<section class="section-space pt-4"><div class="container">
+  <div class="row g-3 mb-5">
+    {% for label, value in [('Services', service_count), ('Customers', customer_count), ('Providers', provider_count), ('Bookings', booking_count)] %}
+      <div class="col-6 col-lg-3"><div class="stat-card"><span>{{ label }}</span><strong>{{ value }}</strong></div></div>
+    {% endfor %}
+  </div>
+  <div class="section-heading"><div><h2 class="h4 mb-1">Service management</h2><p class="text-secondary mb-0">Add, edit, assign, and remove service listings.</p></div></div>
+  <div class="table-responsive content-panel">
+    {% if services %}
+      <table class="table align-middle mb-0"><thead><tr><th>Service</th><th>Category</th><th>Starting price</th><th>Provider</th><th class="text-end">Actions</th></tr></thead><tbody>
+        {% for service in services %}
+          <tr><td><strong>{{ service.title }}</strong><div class="small text-secondary">{{ service.description|truncate(70) }}</div></td><td>{{ service.category.name }}</td><td>${{ "%.2f"|format(service.base_price) }}</td><td>{{ service.provider.name if service.provider else 'Unassigned' }}</td>
+          <td class="text-end text-nowrap"><a class="btn btn-outline-primary btn-sm" href="{{ url_for('admin.edit_service', service_id=service.id) }}">Edit</a>
+            <form class="d-inline" method="post" action="{{ url_for('admin.delete_service', service_id=service.id) }}" data-confirm="Delete this service listing?">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-outline-danger btn-sm" type="submit">Delete</button>
+            </form>
+          </td></tr>
+        {% endfor %}
+      </tbody></table>
+    {% else %}
+      <div class="empty-state"><h2 class="h5">No service listings yet</h2><p class="mb-3">Add the first service to make it available to customers.</p><a class="btn btn-primary btn-sm" href="{{ url_for('admin.create_service') }}">Add a service</a></div>
+    {% endif %}
+  </div>
+</div></section>
+{% endblock %}

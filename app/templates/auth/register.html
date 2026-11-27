@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Create {{ role }} account{% endblock %}
+{% block content %}
+<section class="auth-section">
+  <div class="auth-card">
+    <span class="eyebrow">{{ 'Join our provider network' if role == 'provider' else 'A better way to care for home' }}</span>
+    <h1 class="h2 mt-2">Create a {{ role }} account</h1>
+    <p class="text-secondary mb-4">{{ 'Set up an account to see services assigned to you.' if role == 'provider' else 'Book trusted home services and keep your requests together.' }}</p>
+    <form method="post" novalidate>
+      {{ form.hidden_tag() }}
+      {% for field in [form.name, form.email, form.phone, form.password, form.confirm_password] %}
+        <div class="mb-3">
+          {{ field.label(class="form-label") }}
+          {{ field(class="form-control" + (" is-invalid" if field.errors else "")) }}
+          {% for error in field.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+        </div>
+      {% endfor %}
+      <button class="btn btn-primary w-100 mt-2" type="submit">Create account</button>
+    </form>
+    <p class="small text-secondary text-center mt-4 mb-0">Already registered? <a href="{{ url_for('auth.login') }}">Sign in</a></p>
+    {% if role == 'customer' %}<p class="small text-secondary text-center mt-2 mb-0">Offering home services? <a href="{{ url_for('auth.register', role='provider') }}">Register as a provider</a></p>{% endif %}
+    {% if role == 'provider' %}<p class="small text-secondary text-center mt-2 mb-0">Looking to book? <a href="{{ url_for('auth.register', role='customer') }}">Register as a customer</a></p>{% endif %}
+  </div>
+</section>
+{% endblock %}
