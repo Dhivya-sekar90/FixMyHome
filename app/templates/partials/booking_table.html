@@ -1,0 +1,19 @@
+<div class="table-responsive content-panel">
+  {% if bookings %}
+    <table class="table align-middle mb-0">
+      <thead><tr><th>Service</th><th>Preferred date</th><th>Address</th><th>Requested</th></tr></thead>
+      <tbody>
+      {% for booking in bookings %}
+        <tr>
+          <td><a class="fw-semibold text-decoration-none" href="{{ url_for('main.service_detail', service_id=booking.service.id) }}">{{ booking.service.title }}</a><div class="small text-secondary">{{ booking.service.category.name }}</div></td>
+          <td>{{ booking.scheduled_for.strftime('%b %d, %Y') }}</td>
+          <td>{{ booking.address }}</td>
+          <td>{{ booking.created_at.strftime('%b %d, %Y') }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="empty-state"><h2 class="h5">No bookings yet</h2><p class="mb-3">When you request a service, it will show up here.</p><a class="btn btn-primary btn-sm" href="{{ url_for('main.services') }}">Explore services</a></div>
+  {% endif %}
+</div>

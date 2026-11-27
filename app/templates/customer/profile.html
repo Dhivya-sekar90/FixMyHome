@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Your profile{% endblock %}
+{% block content %}
+<section class="dashboard-header"><div class="container"><span class="eyebrow">Account settings</span><h1 class="h2 mt-2 mb-1">Your profile</h1><p class="text-secondary mb-0">Keep your contact details up to date.</p></div></section>
+<section class="section-space pt-4"><div class="container"><div class="auth-card mx-0">
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+    {% for field in [form.name, form.phone] %}
+      <div class="mb-3">{{ field.label(class="form-label") }}{{ field(class="form-control" + (" is-invalid" if field.errors else "")) }}{% for error in field.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}</div>
+    {% endfor %}
+    <div class="mb-4"><label class="form-label">Email</label><input class="form-control" value="{{ current_user.email }}" disabled><div class="form-text">Email address cannot be changed here.</div></div>
+    <button class="btn btn-primary" type="submit">Save profile</button>
+  </form>
+</div></div></section>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Provider dashboard{% endblock %}
+{% block content %}
+<section class="dashboard-header"><div class="container"><span class="eyebrow">Provider workspace</span><h1 class="h2 mt-2 mb-1">Hello, {{ current_user.name }}</h1><p class="text-secondary mb-0">Services assigned to you and their customer requests.</p></div></section>
+<section class="section-space pt-4"><div class="container">
+  <div class="section-heading"><div><h2 class="h4 mb-1">Your assigned services</h2><p class="text-secondary mb-0">Services managed by the FixMyHome admin.</p></div></div>
+  <div class="row g-3 mb-5">
+    {% for service in services %}
+      <div class="col-md-6 col-lg-4"><div class="compact-service"><span class="category-label">{{ service.category.name }}</span><h3 class="h6 mt-2 mb-1">{{ service.title }}</h3><span class="small text-secondary">From ${{ "%.2f"|format(service.base_price) }}</span></div></div>
+    {% else %}
+      <div class="col-12"><div class="empty-state">No services have been assigned to your account yet.</div></div>
+    {% endfor %}
+  </div>
+  <div class="section-heading"><div><h2 class="h4 mb-1">Customer requests</h2><p class="text-secondary mb-0">Bookings for services assigned to you.</p></div></div>
+  {% if bookings %}
+    <div class="table-responsive content-panel"><table class="table align-middle mb-0"><thead><tr><th>Service</th><th>Customer</th><th>Preferred date</th><th>Address</th><th>Request date</th></tr></thead><tbody>
+      {% for booking in bookings %}<tr><td class="fw-semibold">{{ booking.service.title }}</td><td>{{ booking.customer.name }}<div class="small text-secondary">{{ booking.customer.email }}</div></td><td>{{ booking.scheduled_for.strftime('%b %d, %Y') }}</td><td>{{ booking.address }}</td><td>{{ booking.created_at.strftime('%b %d, %Y') }}</td></tr>{% endfor %}
+    </tbody></table></div>
+  {% else %}<div class="empty-state">No customer requests for your assigned services yet.</div>{% endif %}
+</div></section>
+{% endblock %}

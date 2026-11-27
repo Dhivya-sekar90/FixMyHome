@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Booking history{% endblock %}
+{% block content %}
+<section class="dashboard-header"><div class="container"><span class="eyebrow">Your requests</span><h1 class="h2 mt-2 mb-1">Booking history</h1><p class="text-secondary mb-0">A record of services you have requested.</p></div></section>
+<section class="section-space pt-4"><div class="container">{% include "partials/booking_table.html" %}</div></section>
+{% endblock %}

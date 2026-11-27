@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Admin sign in' if admin_login else 'Sign in' }}{% endblock %}
+{% block content %}
+<section class="auth-section">
+  <div class="auth-card">
+    <span class="eyebrow">{{ 'Administrator access' if admin_login else 'Welcome back' }}</span>
+    <h1 class="h2 mt-2">{{ 'Admin sign in' if admin_login else 'Sign in to FixMyHome' }}</h1>
+    <p class="text-secondary mb-4">{{ 'Use your administrator account to manage services.' if admin_login else 'Access your bookings and account.' }}</p>
+    <form method="post" novalidate>
+      {{ form.hidden_tag() }}
+      {% for field in [form.email, form.password] %}
+        <div class="mb-3">
+          {{ field.label(class="form-label") }}
+          {{ field(class="form-control" + (" is-invalid" if field.errors else "")) }}
+          {% for error in field.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+        </div>
+      {% endfor %}
+      <button class="btn btn-primary w-100 mt-2" type="submit">{{ 'Sign in as admin' if admin_login else 'Sign in' }}</button>
+    </form>
+    {% if not admin_login %}
+      <p class="small text-secondary text-center mt-4 mb-0">New here? <a href="{{ url_for('auth.register', role='customer') }}">Create a customer account</a></p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
